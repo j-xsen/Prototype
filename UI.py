@@ -16,10 +16,8 @@ class UI(GeomNode, Debuggable):
                                  parent=self.ui_node,
                                  pos=(0, 0, 0))
 
-        mode_name = DirectLabel(text="Mode: ", parent=self.ui_node, scale=.075,
-                                pos=(-.88, 0, .025), frameColor=(0, 0, 0, 0))
+        self.mode_name = DirectLabel(text="Mode: ", parent=self.ui_node, scale=.075,
+                                pos=(-.8, 0, .025), frameColor=(0, 0, 0, 0))
 
     def set_mode(self, new_mode_name: str) -> None:
-        self.ui_node.getChild(1).set_text(
-            f"Mode: {new_mode_name}"
-        )
+        self.mode_name.setText(f"Mode: {new_mode_name}")

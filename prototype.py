@@ -3,8 +3,7 @@ from direct.showbase.ShowBase import ShowBase
 from panda3d.core import loadPrcFile
 
 from Debuggable import Debuggable
-from RGBMode import RGBMode
-from UI import UI
+from ModeController import ModeController
 
 loadPrcFile("config/Config.prc")
 
@@ -14,12 +13,11 @@ class Prototype(ShowBase,  Debuggable):
         Debuggable.__init__(self,  "Prototype")
         self.accept("escape", sys.exit)
 
-        ui = UI()
-
-        # load mode
-        self.mode_rgb = RGBMode()
+        mode_controller = ModeController()
+        render.attachNewNode(mode_controller)
 
         aspect2d.ls()
+        render.ls()
 
 app = Prototype()
 app.run()
