@@ -1,8 +1,10 @@
+from direct.showbase.DirectObject import DirectObject
+
 from Debuggable import Debuggable
 
 type Vector = list[float] | None
 
-class Mode(Debuggable):
+class Mode(DirectObject, Debuggable):
     """Base class for all modes.
 
     Attributes:
@@ -13,7 +15,8 @@ class Mode(Debuggable):
     b: Vector = None
     
     def __init__(self,  name: str = "Mode"):
-        super().__init__(name)
+        super().__init__()
+        Debuggable.__init__(self, name)
 
     def activate(self):
         self.reset_all_points()
