@@ -6,7 +6,6 @@ from Mode import Mode
 
 
 class RGBMode(Mode):
-    origin = (0, 0, 0)
     spacing = 0.75
 
     def __init__(self):
@@ -22,9 +21,9 @@ class RGBMode(Mode):
         for r in range(self.resolution):
             for b in range(self.resolution):
                 for g in range(self.resolution):
-                    position = (self.origin[0] + (r * self.spacing) - ((self.resolution * self.spacing) / 2),
-                                self.origin[1] + (g * self.spacing) - ((self.resolution * self.spacing) / 2),
-                                self.origin[2] + (b * self.spacing) - ((self.resolution * self.spacing) / 2))
+                    position = ((r * self.spacing) - ((self.resolution * self.spacing) / 2),
+                                (g * self.spacing) - ((self.resolution * self.spacing) / 2),
+                                (b * self.spacing) - ((self.resolution * self.spacing) / 2))
                     self.generator.billboard(pos=position, frame=(0, 0, 1, 1), size=0.1, color=(r / self.resolution,
                                                                                                 g / self.resolution,
                                                                                                 b / self.resolution, 1))
