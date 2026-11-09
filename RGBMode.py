@@ -33,8 +33,8 @@ class RGBMode(Mode):
         # mouse
         self.accept("mouse1", self._enable_rotating)
         self.accept("mouse1-up", self._disable_rotating)
-        self.accept("wheel_up", self._zoom_in)
-        self.accept("wheel_down", self._zoom_out)
+        self.accept("wheel_up", self._zoom, [1])
+        self.accept("wheel_down", self._zoom, [-1])
         # keyboard
         self.accept("a", self._rotate_h)
         self.accept("d", self._rotate_h, [-1])
@@ -55,13 +55,9 @@ class RGBMode(Mode):
             return
         self._enable_rotating()
 
-    def _zoom_in(self):
-        cur_pos = self.holder_node.getPos()
-        self.holder_node.setPos(cur_pos[0], cur_pos[1] - 2, cur_pos[2])
-
-    def _zoom_out(self):
-        cur_pos = self.holder_node.getPos()
-        self.holder_node.setPos(cur_pos[0], cur_pos[1] + 2, cur_pos[2])
+    def _zoom(self, inward: int):
+        scroll_distance = 2 # TODO make this more changeable
+        self.holder_node.setPos(self.holder_node, 0, scroll_distance * inward, 0)
 
     def _enable_mouse_mode(self):
         self._rotating = RotatingState.MOUSE
