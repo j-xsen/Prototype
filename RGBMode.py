@@ -1,6 +1,15 @@
+from enum import Enum
+
 from panda3d.core import MeshDrawer
 
 from Mode import Mode
+
+
+class RotatingState(Enum):
+    STATIC = 0
+    MOUSE = 1
+    LEFT = 2
+    RIGHT = 3
 
 
 class RGBMode(Mode):
@@ -8,7 +17,7 @@ class RGBMode(Mode):
     resolution = 15
     spacing = 0.75
 
-    _rotating: bool = False
+    _rotating: RotatingState = RotatingState.STATIC
     _rotating_origin = (0, 0)
 
     def __init__(self):
@@ -16,15 +25,35 @@ class RGBMode(Mode):
         self.holder_node = render.attachNewNode("RGBMode")
         self.holder_node.setPos(0, 75, 0)
         self.generator = MeshDrawer()
-        self.generator.setBudget(pow(self.resolution, 3)*2)
+        self.generator.setBudget(pow(self.resolution, 3) * 2)
         self.generator_node = self.generator.getRoot()
         self.generator_node.setTwoSided(True)
         self.generator_node.reparentTo(self.holder_node)
 
+        # mouse
         self.accept("mouse1", self._enable_rotating)
         self.accept("mouse1-up", self._disable_rotating)
         self.accept("wheel_up", self._zoom_in)
         self.accept("wheel_down", self._zoom_out)
+        # keyboard
+        self.accept("a", self._rotate_h)
+        self.accept("d", self._rotate_h, [-1])
+        self.accept("a-up", self._rotate_h, [0])
+        self.accept("d-up", self._rotate_h, [0])
+
+    def _rotate_h(self, amount=1):
+        self.holder_node.setH(self.holder_node, amount)
+        if amount == 1:
+            print("LEFT")
+            self._rotating = RotatingState.LEFT
+        elif amount == -1:
+            self._rotating = RotatingState.RIGHT
+        elif amount == 0:
+            print("STOP")
+            self._rotating = RotatingState.STATIC
+            self._disable_rotating()
+            return
+        self._enable_rotating()
 
     def _zoom_in(self):
         cur_pos = self.holder_node.getPos()
@@ -34,32 +63,39 @@ class RGBMode(Mode):
         cur_pos = self.holder_node.getPos()
         self.holder_node.setPos(cur_pos[0], cur_pos[1] + 2, cur_pos[2])
 
-    def _enable_rotating(self):
-        self._rotating = True
+    def _enable_mouse_mode(self):
+        self._rotating = RotatingState.MOUSE
         self._rotating_origin = (base.mouseWatcherNode.getMouseX(), base.mouseWatcherNode.getMouseY())
+        self._enable_rotating()
+
+    def _enable_rotating(self):
         taskMgr.add(self._handle_rotation, "handle_rotation")
 
     def _disable_rotating(self):
-        self._rotating = False
+        self._rotating = RotatingState.STATIC
         self._rotating_origin = (0, 0)
         taskMgr.remove("handle_rotation")
 
     def _handle_rotation(self, task):
-        min_difference = 0.25
-        # find current mouse position
-        if base.mouseWatcherNode.hasMouse():
-            x = base.mouseWatcherNode.getMouseX()
-            y = base.mouseWatcherNode.getMouseY()
+        if self._rotating == RotatingState.MOUSE:
+            min_difference = 0.25
+            if base.mouseWatcherNode.hasMouse():
+                x = base.mouseWatcherNode.getMouseX()
+                y = base.mouseWatcherNode.getMouseY()
 
-            if x > self._rotating_origin[0] and abs(x - self._rotating_origin[0]) > min_difference:
+                if x > self._rotating_origin[0] and abs(x - self._rotating_origin[0]) > min_difference:
+                    self.holder_node.setH(self.holder_node, -1)
+                elif x < self._rotating_origin[0] and abs(x - self._rotating_origin[0]) > min_difference:
+                    self.holder_node.setH(self.holder_node, 1)
+                if y > self._rotating_origin[1] and abs(y - self._rotating_origin[1]) > min_difference:
+                    self.holder_node.setP(self.holder_node, -1)
+                elif y < self._rotating_origin[1] and abs(y - self._rotating_origin[1]) > min_difference:
+                    self.holder_node.setP(self.holder_node, 1)
+        elif self._rotating.value > 1:
+            if self._rotating == RotatingState.LEFT:
                 self.holder_node.setH(self.holder_node, -1)
-            elif x < self._rotating_origin[0] and abs(x - self._rotating_origin[0]) > min_difference:
+            elif self._rotating == RotatingState.RIGHT:
                 self.holder_node.setH(self.holder_node, 1)
-            if y > self._rotating_origin[1] and abs(y - self._rotating_origin[1]) > min_difference:
-                self.holder_node.setP(self.holder_node, -1)
-            elif y < self._rotating_origin[1] and abs(y - self._rotating_origin[1]) > min_difference:
-                self.holder_node.setP(self.holder_node, 1)
-        # compare to original mouse position
         return task.cont
 
     def generate_field(self):
