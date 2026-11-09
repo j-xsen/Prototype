@@ -12,7 +12,7 @@ class Prototype(ShowBase,  Debuggable):
         ShowBase.__init__(self)
         Debuggable.__init__(self,  "Prototype")
         self.accept("escape", sys.exit)
-
+        base.disableMouse()
         mode_controller = ModeController()
         render.attachNewNode(mode_controller)
 
