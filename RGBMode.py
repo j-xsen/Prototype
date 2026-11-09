@@ -5,7 +5,7 @@ from Mode import Mode
 
 class RGBMode(Mode):
     origin = (0, 0, 0)
-    resolution = 25
+    resolution = 15
     spacing = 0.75
 
     _rotating: bool = False
@@ -16,7 +16,7 @@ class RGBMode(Mode):
         self.holder_node = render.attachNewNode("RGBMode")
         self.holder_node.setPos(0, 75, 0)
         self.generator = MeshDrawer()
-        self.generator.setBudget(1000)  # 500 billboarded quads / 1000 tris
+        self.generator.setBudget(pow(self.resolution, 3)*2)  # 5000 billboarded quads / 10000 tris
         self.generator_node = self.generator.getRoot()
         self.generator_node.setTwoSided(True)
         self.generator_node.reparentTo(self.holder_node)
@@ -56,11 +56,13 @@ class RGBMode(Mode):
 
         for r in range(self.resolution):
             for b in range(self.resolution):
-                position = (self.origin[0] + (r * self.spacing) - ((self.resolution * self.spacing) / 2),
-                            self.origin[1],
-                            self.origin[2] + (b * self.spacing) - ((self.resolution * self.spacing) / 2))
-                self.generator.billboard(pos=position, frame=(0, 0, 1, 1), size=0.1, color=(r / self.resolution, 0,
-                                                                                            b / self.resolution, 1))
+                for g in range(self.resolution):
+                    position = (self.origin[0] + (r * self.spacing) - ((self.resolution * self.spacing) / 2),
+                                self.origin[1] + (g * self.spacing) - ((self.resolution * self.spacing) / 2),
+                                self.origin[2] + (b * self.spacing) - ((self.resolution * self.spacing) / 2))
+                    self.generator.billboard(pos=position, frame=(0, 0, 1, 1), size=0.1, color=(r / self.resolution,
+                                                                                                g / self.resolution,
+                                                                                                b / self.resolution, 1))
 
         self.generator.end()
         return task.cont
