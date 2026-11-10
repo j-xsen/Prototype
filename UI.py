@@ -3,6 +3,7 @@ from direct.gui.DirectLabel import DirectLabel
 from panda3d.core import GeomNode
 
 from Debuggable import Debuggable
+from PointFrame.PointFrame import PointFrame
 
 
 class UI(GeomNode, Debuggable):
@@ -18,6 +19,11 @@ class UI(GeomNode, Debuggable):
 
         self.mode_name = DirectLabel(text="Mode: ", parent=self.ui_node, scale=.075,
                                 pos=(-.8, 0, .025), frameColor=(0, 0, 0, 0))
+
+        self.point_frame = PointFrame()
+        self.point_frame.reparentTo(aspect2d)
+
+        print(self.point_frame.getParent(), self.point_frame.isHidden(), self.point_frame.getBounds())
 
         # self.point_a = DirectLabel(text="A: (0,0,0)", parent=self.ui_node, scale=.075,
         #                         pos=(0, 0, .025), frameColor=(0, 0, 0, 0))
