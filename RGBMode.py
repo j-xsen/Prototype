@@ -14,7 +14,7 @@ class RGBMode(Mode):
         pass
 
     def draw_task(self, task):
-        self.generator.begin(base.cam, self.v_rotate_node)
+        self._generator.begin(base.cam, self._v_rotate_node)
 
         for r in range(self.resolution):
             for b in range(self.resolution):
@@ -22,9 +22,9 @@ class RGBMode(Mode):
                     position = ((r * self.spacing) - ((self.resolution * self.spacing) / 2),
                                 (g * self.spacing) - ((self.resolution * self.spacing) / 2),
                                 (b * self.spacing) - ((self.resolution * self.spacing) / 2))
-                    self.generator.billboard(pos=position, frame=(0, 0, 1, 1), size=0.1, color=(r / self.resolution,
-                                                                                                g / self.resolution,
-                                                                                                b / self.resolution, 1))
+                    self._generator.billboard(pos=position, frame=(0, 0, 1, 1), size=0.1, color=(r / self.resolution,
+                                                                                                 g / self.resolution,
+                                                                                                 b / self.resolution, 1))
 
-        self.generator.end()
+        self._generator.end()
         return task.cont

@@ -28,8 +28,9 @@ class Mode(DirectObject, Debuggable):
     a: Vector = None
     b: Vector = None
     resolution: int = 15
-    generator: MeshDrawer | None = None
-    generator_node: NodePath | None = None
+
+    _generator: MeshDrawer | None = None
+    _generator_node: NodePath | None = None
 
     _rotating: RotatingState = RotatingState.STATIC
     _rotating_origin = (0, 0)
@@ -37,23 +38,16 @@ class Mode(DirectObject, Debuggable):
     def __init__(self,  v_rotate_node: NodePath, name: str = "Mode"):
         super().__init__()
         Debuggable.__init__(self, name)
-        self.v_rotate_node = v_rotate_node
-        # # transform node
-        # # horizontal rotate node
-        # # vertical rotate node
-        # self.transform_node = render.attachNewNode(name)
-        # self.transform_node.setPos(0, 50, 0)
-        # self.h_rotate_node = self.transform_node.attachNewNode("HRotate")
-        # self.v_rotate_node = self.h_rotate_node.attachNewNode("VRotate")
+        self._v_rotate_node = v_rotate_node
 
     def activate(self):
         self.reset_all_points()
 
-        self.generator = MeshDrawer()
-        self.generator.setBudget(pow(self.resolution, 3) * 2)
-        self.generator_node = self.generator.getRoot()
-        self.generator_node.setTwoSided(True)
-        self.generator_node.reparentTo(self.v_rotate_node)
+        self._generator = MeshDrawer()
+        self._generator.setBudget(pow(self.resolution, 3) * 2)
+        self._generator_node = self._generator.getRoot()
+        self._generator_node.setTwoSided(True)
+        self._generator_node.reparentTo(self._v_rotate_node)
 
         self.generate_field()
     
