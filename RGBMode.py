@@ -1,6 +1,4 @@
-from enum import IntEnum
-
-from panda3d.core import MeshDrawer
+from panda3d.core import NodePath
 
 from Mode import Mode
 
@@ -8,8 +6,8 @@ from Mode import Mode
 class RGBMode(Mode):
     spacing = 0.75
 
-    def __init__(self):
-        super().__init__(name="RGB")
+    def __init__(self, parent: NodePath):
+        super().__init__(parent, name="RGB")
 
     def generate_field(self):
         taskMgr.add(self.draw_task, "draw_task")

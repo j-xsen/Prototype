@@ -19,5 +19,11 @@ class UI(GeomNode, Debuggable):
         self.mode_name = DirectLabel(text="Mode: ", parent=self.ui_node, scale=.075,
                                 pos=(-.8, 0, .025), frameColor=(0, 0, 0, 0))
 
+        # self.point_a = DirectLabel(text="A: (0,0,0)", parent=self.ui_node, scale=.075,
+        #                         pos=(0, 0, .025), frameColor=(0, 0, 0, 0))
+        #
+        # self.point_b = DirectLabel(text="B: (0,0,0)", parent=self.ui_node, scale=.075,
+        #                         pos=(.2, 0, .025), frameColor=(0, 0, 0, 0))
+
     def set_mode(self, new_mode_name: str) -> None:
         self.mode_name.setText(f"Mode: {new_mode_name}")
