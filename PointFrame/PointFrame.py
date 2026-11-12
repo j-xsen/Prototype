@@ -16,6 +16,6 @@ class PointFrame(DirectFrame):
         self.accept("PlacePoint", self._point_added)
 
     def _point_added(self, x, y, z):
-        text = DirectLabel(parent=self, text=f"{x:.2f} {y:.2f} {z:.2f}", scale=0.07,
+        text = DirectLabel(parent=self, text=f"({x:.2f}, {y:.2f}, {z:.2f})", scale=0.07,
                            pos=(0,0,-0.1 -.075*self._point_count))
         self._point_count += 1
