@@ -16,6 +16,9 @@ class Prototype(ShowBase,  Debuggable):
         mode_controller = ModeController()
         render.attachNewNode(mode_controller)
 
+        self.accept("z", self._debug_print_tree)
+
+    def _debug_print_tree(self):
         aspect2d.ls()
         render.ls()
 
