@@ -1,10 +1,9 @@
-from random import random
-
 from direct.showbase.DirectObject import DirectObject
 from panda3d.core import PandaNode
 
 from Debuggable import Debuggable
 from Mode import Mode, RotatingState
+from Points.PointController import PointController
 from RGBMode import RGBMode
 from UI import UI
 
@@ -28,6 +27,8 @@ class ModeController(PandaNode, DirectObject, Debuggable):
         self.h_rotate_node = self.transform_node.attachNewNode("HRotate")
         self.v_rotate_node = self.h_rotate_node.attachNewNode("VRotate")
 
+        self.point_controller = PointController()
+
         # load all modes
         rgb_mode = RGBMode(self.v_rotate_node)
         self._modes.append(rgb_mode)
@@ -47,7 +48,6 @@ class ModeController(PandaNode, DirectObject, Debuggable):
         self.accept("d", self._rotate, [RotatingState.RIGHT])
         self.accept("s", self._rotate, [RotatingState.DOWN])
         self.accept("w", self._rotate, [RotatingState.UP])
-        self.accept("q", self._place_random_point)
         self.accept("a-up", self._rotate, [0])
         self.accept("d-up", self._rotate, [0])
         self.accept("s-up", self._rotate, [0])
@@ -71,9 +71,6 @@ class ModeController(PandaNode, DirectObject, Debuggable):
         """
         scroll_distance = 2 # TODO make this more changeable
         self.transform_node.setPos(self.transform_node, 0, scroll_distance * inward, 0)
-
-    def _place_random_point(self):
-        messenger.send("PlacePoint", [random(), random(), random()])
 
     def _enable_mouse_mode(self):
         self._rotating = RotatingState.MOUSE

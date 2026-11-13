@@ -3,7 +3,7 @@ from direct.gui.DirectLabel import DirectLabel
 from panda3d.core import GeomNode
 
 from Debuggable import Debuggable
-from PointFrame.PointFrame import PointFrame
+from Points.PointFrame import PointFrame
 
 
 class UI(GeomNode, Debuggable):
@@ -11,7 +11,6 @@ class UI(GeomNode, Debuggable):
         super().__init__("UI")
 
         self.ui_node = aspect2d.getChild(3).attachNewNode(self) # a2d bottom center
-
         background = DirectFrame(frameColor=(1, 1, 1, 1),
                                  frameSize=(-1, 1, 0, .1),
                                  parent=self.ui_node,
