@@ -12,7 +12,6 @@ class PointController(DirectObject):
         pass
 
     def _place_random_point(self):
-        print("Placing random point")
         new_point = RandomPoint()
         self.add_point(new_point)
 
