@@ -73,13 +73,6 @@ class Mode(DirectObject, Debuggable):
             return -1
         self.notify.error("measure_distance not implemented")
         return -2
-    
-    def reset_a(self):
-        self.a = None
-    
-    def reset_b(self):
-        self.b = None
-    
+
     def reset_all_points(self):
-        self.reset_a()
-        self.reset_b()
+        pass
