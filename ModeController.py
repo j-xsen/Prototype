@@ -27,10 +27,10 @@ class ModeController(PandaNode, DirectObject, Debuggable):
         self.h_rotate_node = self.transform_node.attachNewNode("HRotate")
         self.v_rotate_node = self.h_rotate_node.attachNewNode("VRotate")
 
-        self.point_controller = PointController()
+        self.point_controller = PointController(self.v_rotate_node)
 
         # load all modes
-        rgb_mode = RGBMode(self.v_rotate_node)
+        rgb_mode = RGBMode(self.point_controller)
         self._modes.append(rgb_mode)
 
         self.ui = UI()

@@ -4,6 +4,7 @@ from direct.showbase.DirectObject import DirectObject
 from panda3d.core import MeshDrawer, NodePath
 
 from Debuggable import Debuggable
+from Points.PointController import PointController
 
 type Vector = list[float] | None
 
@@ -21,58 +22,30 @@ class Mode(DirectObject, Debuggable):
     """Base class for all modes.
 
     Attributes:
-        a (Vector): The first point.
-        b (Vector): The second point.
         resolution (int): Number of points to draw.
     """
-    a: Vector = None
-    b: Vector = None
     resolution: int = 15
 
     _generator: MeshDrawer | None = None
     _generator_node: NodePath | None = None
 
     _rotating: RotatingState = RotatingState.STATIC
-    _rotating_origin = (0, 0)
+
+    _point_accommodation = 10 # points to budget for in mesh drawer
     
-    def __init__(self,  v_rotate_node: NodePath, name: str = "Mode"):
+    def __init__(self,  point_controller: PointController, name: str = "Mode"):
         super().__init__()
         Debuggable.__init__(self, name)
-        self._v_rotate_node = v_rotate_node
+        self.point_controller = point_controller
 
     def activate(self):
-        self.reset_all_points()
-
         self._generator = MeshDrawer()
-        self._generator.setBudget(pow(self.resolution, 3) * 2)
+        self._generator.setBudget(pow(self.resolution, 3) * 2 + (self._point_accommodation * 2))
         self._generator_node = self._generator.getRoot()
         self._generator_node.setTwoSided(True)
-        self._generator_node.reparentTo(self._v_rotate_node)
+        self._generator_node.reparentTo(self.point_controller.root_node)
 
         self.generate_field()
     
     def generate_field(self):
         self.notify.error("generate_field not implemented")
-    
-    def place_a_point(self, x,  y,  z):
-        self.notify.error("place_a_point not implemented")
-    
-    def place_b_point(self,  x,  y,  z):
-        self.notify.error("place_b_point not implemented")
-    
-    def measure_distance(self) -> float:
-        """Measure distance between points A and B.
-
-        Returns:
-            The distance between points A and B. Negative value is a failure.
-            -1: missing A or B
-            -2: not implemented
-        """
-        if not self.a or not self.b:
-            self.notify.error("Missing A or B")
-            return -1
-        self.notify.error("measure_distance not implemented")
-        return -2
-
-    def reset_all_points(self):
-        pass

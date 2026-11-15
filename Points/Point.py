@@ -10,6 +10,9 @@ class Point:
     def __str__(self):
         return f"({self.x:.2f}, {self.y:.2f}, {self.z:.2f})"
 
+    def vec(self):
+        return self.x, self.y, self.z
+
 
 class RandomPoint(Point):
     def __init__(self):
